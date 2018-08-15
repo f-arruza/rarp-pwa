@@ -28,7 +28,6 @@
     });
 
     document.getElementById('butAddCity').addEventListener('click', function () {
-
         var select = document.getElementById('selectTimetableToAdd');
         var selected = select.options[select.selectedIndex];
         var key = selected.value;
@@ -38,6 +37,10 @@
         }
         app.getSchedule(key, label);
         app.selectedTimetables.push({key: key, label: label});
+
+        // Se guardan las estaciones seleccionadas en el localStorage
+        app.saveSelectedTimetables();
+        console.log("Estacion [" + label + "] almacenada en el localStorage");
         app.toggleAddDialog(false);
     });
 
