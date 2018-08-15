@@ -29,7 +29,6 @@
 
     document.getElementById('butAddCity').addEventListener('click', function () {
 
-
         var select = document.getElementById('selectTimetableToAdd');
         var selected = select.options[select.selectedIndex];
         var key = selected.value;
@@ -46,7 +45,6 @@
         // Close the add new station dialog
         app.toggleAddDialog(false);
     });
-
 
     /*****************************************************************************
      *
@@ -108,6 +106,11 @@
      *
      ****************************************************************************/
 
+     // Save list of cities to localStorage.
+     app.saveSelectedTimetables = function() {
+       var selectedTimetables = JSON.stringify(app.selectedTimetables);
+       localStorage.selectedTimetables = selectedTimetables;
+     };
 
     app.getSchedule = function (key, label) {
         var url = 'https://api-ratp.pierre-grimaud.fr/v3/schedules/' + key;
@@ -148,7 +151,6 @@
      */
 
     var initialStationTimetable = {
-
         key: 'metros/1/bastille/A',
         label: 'Bastille, Direction La Défense',
         created: '2017-07-18T17:08:42+02:00',
@@ -165,20 +167,24 @@
         ]
     };
 
-
-    /************************************************************************
-     *
-     * Code required to start the app
-     *
-     * NOTE: To simplify this codelab, we've used localStorage.
-     *   localStorage is a synchronous API and has serious performance
-     *   implications. It should not be used in production applications!
-     *   Instead, check out IDB (https://www.npmjs.com/package/idb) or
-     *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
-     ************************************************************************/
-
-    app.getSchedule('metros/1/bastille/A', 'Bastille, Direction La Défense');
-    app.selectedTimetables = [
+    /*
+      Inyección datos primer reload (PASO 1).
+      Se identifica que es el PRIMER CARGUE porque no hay estaciones
+      seleccionadas, es decir, guardadas en el localStorage, por tanto se
+      cargan datos por defecto.
+    */
+    app.selectedTimetables = localStorage.selectedTimetables;
+    if (app.selectedTimetables) {
+      app.selectedTimetables = JSON.parse(app.selectedTimetables);
+      app.selectedTimetables.forEach(function(sch) {
+        app.getSchedule(sch.key, sch.label);
+      });
+    } else {
+      app.updateTimetableCard(initialStationTimetable);
+      app.selectedTimetables = [
         {key: initialStationTimetable.key, label: initialStationTimetable.label}
-    ];
+      ];
+      app.saveSelectedTimetables();
+      console.log('DATOS POR DEFECTO CARGADOS!!!');
+    }
 })();
