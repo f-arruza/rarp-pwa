@@ -7,6 +7,12 @@
 
 Reporte: [consultar](lighthouse/localhost_2018-08-29_11-56-52.report.html).
 
+Comando ejecutado: 
+
+```lighthouse --config-path=custom-config.js http://localhost:8887 --view```
+
+Capturas de pantalla:
+
 ![alt text](lighthouse/images/lighthouse01.png)
 ![alt text](lighthouse/images/lighthouse02.png)
 
