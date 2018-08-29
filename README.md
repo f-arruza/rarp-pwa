@@ -10,7 +10,7 @@ Reporte: [consultar](lighthouse/localhost_2018-08-29_11-56-52.report.html).
 ![alt text](lighthouse/images/lighthouse01.png)
 ![alt text](lighthouse/images/lighthouse02.png)
 
-## Taller 1
+## Taller 1 :: Progressive Web Apps (PWA)
 ## Auditoría INICIAL con Google Lighthouse
 ![alt text](docs/auditoria_inicial.png)
 
