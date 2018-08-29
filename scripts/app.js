@@ -112,6 +112,8 @@
         }
 
         if (app.isLoading) {
+            // Marca de tiempo (finalización)
+            window.cardLoadTime = performance.now();
             app.spinner.setAttribute('hidden', true);
             app.container.removeAttribute('hidden');
             app.isLoading = false;
@@ -127,6 +129,9 @@
      // Save list of cities to localStorage
      app.saveSelectedTimetables = function() {
        var selectedTimetables = JSON.stringify(app.selectedTimetables);
+
+       console.log('Carga info del localStorage.');
+       app.selectedTimetables = localStorage.selectedTimetables;
 
        if(!app.useIndexedDB) {
           localStorage.selectedTimetables = selectedTimetables;
@@ -184,6 +189,9 @@
         request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status === 200) {
+                    // Tiempo transcurrido hasta obtener respuesta del Webservice
+                    window.apiResponseTime = performance.now();
+
                     var response = JSON.parse(request.response);
                     var result = {};
                     result.key = key;
@@ -213,6 +221,7 @@
         app.selectedTimetables = [
           {key: initialStationTimetable.key, label: initialStationTimetable.label}
         ];
+        app.getSchedule(initialStationTimetable.key, initialStationTimetable.label);
         app.saveSelectedTimetables();
         console.log('DATOS POR DEFECTO CARGADOS!!!');
     }
@@ -272,12 +281,10 @@
       cargan datos por defecto.
     */
     if(!app.useIndexedDB) {
-      console.log('Carga info del localStorage.');
-      app.selectedTimetables = localStorage.selectedTimetables;
-
       if (app.selectedTimetables) {
           app.selectedTimetables = JSON.parse(app.selectedTimetables);
           app.selectedTimetables.forEach(function(sch) {
+
             app.getSchedule(sch.key, sch.label);
           });
       } else {
@@ -321,10 +328,4 @@
         console.log("Service Worker Registered");
       });
     }
-
-    // if ('serviceWorker' in navigator) {
-    //     navigator.serviceWorker
-    //            .register('./service-worker.js')
-    //            .then(function() { console.log('Service Worker Registered'); });
-    // }
 })();
